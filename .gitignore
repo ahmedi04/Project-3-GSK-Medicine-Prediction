@@ -1,0 +1,10 @@
+gsk_env/
+old_chunked_version/
+
+outputs/*.csv
+outputs/*.parquet
+outputs.zip
+
+__pycache__/
+*.pyc
+.DS_Store

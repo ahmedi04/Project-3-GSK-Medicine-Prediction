@@ -1,0 +1,59 @@
+Step 3 - Feature Engineering Report
+===================================
+
+Source file: outputs/data_cleaned.parquet
+Output file: outputs/data_engineered.parquet
+
+Input shape: 1050000 rows, 31 columns
+Output shape: 1050000 rows, 38 columns
+
+Global dosage_mg median: 100.0
+
+Kidney-stage category counts:
+kidney_stage
+Mild        541932
+Normal      256813
+Moderate    219403
+Severe       31852
+
+BMI-category counts:
+bmi_category
+Obese          343001
+Overweight     309169
+Normal         290437
+Underweight    107393
+
+Age-group counts:
+age_group
+Middle Aged    636900
+Senior         199887
+Young Adult    110092
+Elderly         79666
+Pediatric       23455
+
+Binary feature counts:
+ - liver_risk=1: 297920
+ - polypharmacy=1: 168862
+ - elderly_high_dose=1: 108336
+
+De Ritis ratio statistics:
+ - valid median before capping: 0.903448275862069
+ - Q1: 0.5511319281811083
+ - Q3: 1.48
+ - IQR: 0.9288680718188916
+ - original lower IQR limit: -0.8421701795472291
+ - final non-negative lower limit: 0.0
+ - upper IQR limit: 2.873302107728337
+ - ratios below lower limit: 0
+ - ratios above upper limit: 60779
+ - total ratios capped: 60779
+ - median after capping: 0.903448275862069
+ - minimum after capping: 0.0
+ - maximum after capping: 2.873302107728337
+
+Missing treatment_outcome values preserved: 64124
+These rows must be removed before supervised model training.
+
+patient_id unique after feature engineering: True
+No rows were removed during feature engineering.
+One-hot encoding and feature scaling were not performed to avoid data leakage before splitting.

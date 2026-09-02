@@ -1,0 +1,25 @@
+Step 2 - Data cleaning report
+=============================
+
+Original shape: rows=1155000, columns=41
+Exact full-row duplicates: 70017
+Unique Patient_IDs: 1050000
+Repeated Patient_ID rows (additional copies beyond first): 105000
+Non-identical repeated rows (estimated): 34983
+Filled Age from age_1: 3099
+Filled Gender from gender_1: 2405
+Filled Drug_Name from drug_name_1: 73347
+Filled weight_kg from Weight_lbs: 54676
+Filled systolic_bp from blood_pressure: 90821
+Filled diastolic_bp from blood_pressure: 51560
+Rows after keeping first Patient_ID occurrences: 1050000
+Dropped columns: ['patient_id_1', 'age_1', 'gender_1', 'drug_name_1', 'Weight_lbs', 'blood_pressure', 'Notes', 'Extra_Col_1', 'Extra_Col_2', 'unnamed_0']
+treatment_outcome missing after parsing: 64124 (keep rows; remove before supervised training)
+Numeric medians used for imputation: {'age': np.float64(54.0), 'weight_kg': np.float64(78.0), 'height_cm': np.float64(170.1), 'systolic_bp': np.float64(130.0), 'diastolic_bp': np.float64(79.0), 'heart_rate': np.float64(74.0), 'temperature_f': np.float64(98.6), 'hemoglobin': np.float64(13.5), 'wbc_count': np.float64(7514.0), 'alt_enzyme': np.float64(24.5), 'ast_enzyme': np.float64(22.2), 'creatinine': np.float64(1.11), 'egfr': np.float64(75.2), 'hba1c': np.float64(6.5), 'total_cholesterol': np.float64(200.0), 'dosage_mg': np.float64(100.0), 'duration_days': np.float64(60.0), 'concurrent_drugs': np.float64(3.0)}
+Categorical modes used: {'gender': 'male', 'ethnicity': 'hispanic_or_latino', 'bmi': 25.6, 'drug_name': 'amoxicillin', 'route': 'intravenous', 'diagnosis': 'type 2 diabetes', 'smoking_status': 'current', 'alcohol_use': 'daily'}
+IQR limits and capped counts: {'age': {'q1': 43.0, 'q3': 65.0, 'iqr': 22.0, 'lower': 10.0, 'upper': 98.0, 'below': 9947, 'above': 6852, 'min_after': 10.0, 'max_after': 98.0}, 'bmi': {'q1': 22.4, 'q3': 31.8, 'iqr': 9.400000000000002, 'lower': 8.299999999999995, 'upper': 45.900000000000006, 'below': 1598, 'above': 15231, 'min_after': 8.299999999999995, 'max_after': 45.900000000000006}, 'dosage_mg': {'q1': 25.0, 'q3': 250.0, 'iqr': 225.0, 'lower': -312.5, 'upper': 587.5, 'below': 0, 'above': 162018, 'min_after': 0.0, 'max_after': 587.5}, 'hemoglobin': {'q1': 12.2, 'q3': 14.8, 'iqr': 2.6000000000000014, 'lower': 8.299999999999997, 'upper': 18.700000000000003, 'below': 7973, 'above': 7991, 'min_after': 8.299999999999997, 'max_after': 18.700000000000003}, 'creatinine': {'q1': 0.88, 'q3': 1.38, 'iqr': 0.4999999999999999, 'lower': 0.13000000000000023, 'upper': 2.13, 'below': 0, 'above': 45513, 'min_after': 0.14, 'max_after': 2.13}, 'alt_enzyme': {'q1': 16.8, 'q3': 35.7, 'iqr': 18.900000000000002, 'lower': -11.55, 'upper': 64.05000000000001, 'below': 0, 'above': 53905, 'min_after': 0.0, 'max_after': 64.05000000000001}, 'ast_enzyme': {'q1': 16.2, 'q3': 30.3, 'iqr': 14.100000000000001, 'lower': -4.950000000000003, 'upper': 51.45, 'below': 0, 'above': 45563, 'min_after': 0.0, 'max_after': 51.45}}
+Final shape: rows=1050000, columns=31
+patient_id unique after cleaning: True
+Final columns (31): ['patient_id', 'age', 'gender', 'ethnicity', 'weight_kg', 'height_cm', 'bmi', 'systolic_bp', 'diastolic_bp', 'heart_rate', 'temperature_f', 'hemoglobin', 'wbc_count', 'alt_enzyme', 'ast_enzyme', 'creatinine', 'egfr', 'hba1c', 'total_cholesterol', 'drug_name', 'dosage_mg', 'duration_days', 'route', 'concurrent_drugs', 'diagnosis', 'smoking_status', 'alcohol_use', 'admission_date', 'treatment_outcome', 'adverse_event', 'readmission_30d']
+Missing counts after cleaning: {'patient_id': 0, 'age': 0, 'gender': 0, 'ethnicity': 0, 'weight_kg': 0, 'height_cm': 0, 'bmi': 0, 'systolic_bp': 0, 'diastolic_bp': 0, 'heart_rate': 0, 'temperature_f': 0, 'hemoglobin': 0, 'wbc_count': 0, 'alt_enzyme': 0, 'ast_enzyme': 0, 'creatinine': 0, 'egfr': 0, 'hba1c': 0, 'total_cholesterol': 0, 'drug_name': 0, 'dosage_mg': 0, 'duration_days': 0, 'route': 0, 'concurrent_drugs': 0, 'diagnosis': 0, 'smoking_status': 0, 'alcohol_use': 0, 'admission_date': 304892, 'treatment_outcome': 64124, 'adverse_event': 84435, 'readmission_30d': 1050000}
+Wrote cleaned Parquet to outputs/data_cleaned.parquet

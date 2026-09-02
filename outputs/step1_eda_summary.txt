@@ -1,0 +1,167 @@
+Step 1 - Exploratory Data Analysis Summary
+=========================================
+
+Source file: outputs/clinical_data_raw.parquet
+
+Dataset rows: 1155000
+Dataset columns: 41
+DataFrame memory usage: 1206.45 MB
+
+Column names and data types:
+ - Patient_ID: int64
+ - patient_id_1: float64
+ - Age: float64
+ - age_1: float64
+ - Gender: object
+ - gender_1: object
+ - Ethnicity: object
+ - Weight_kg: float64
+ - Weight_lbs: float64
+ - Height_cm: float64
+ - BMI: float64
+ - blood_pressure: object
+ - Systolic_BP: float64
+ - Diastolic_BP: float64
+ - Heart_Rate: float64
+ - Temperature_F: float64
+ - Hemoglobin: float64
+ - WBC_Count: float64
+ - ALT_Enzyme: float64
+ - AST_Enzyme: float64
+ - Creatinine: float64
+ - eGFR: float64
+ - HbA1c: float64
+ - Total_Cholesterol: float64
+ - Drug_Name: object
+ - drug_name_1: object
+ - Dosage: object
+ - Duration_Days: object
+ - Route: object
+ - Concurrent_Drugs: float64
+ - Diagnosis: object
+ - Smoking_Status: object
+ - Alcohol_Use: object
+ - Admission_Date: object
+ - Treatment_Outcome: object
+ - Adverse_Event: object
+ - Readmission_30d: float64
+ - Notes: object
+ - Extra_Col_1: object
+ - Extra_Col_2: object
+ - unnamed_0: float64
+
+First five rows:
+ Patient_ID  patient_id_1   Age  age_1  Gender gender_1 Ethnicity  Weight_kg  Weight_lbs  Height_cm  BMI blood_pressure  Systolic_BP  Diastolic_BP  Heart_Rate  Temperature_F  Hemoglobin  WBC_Count  ALT_Enzyme  AST_Enzyme  Creatinine  eGFR  HbA1c  Total_Cholesterol   Drug_Name drug_name_1 Dosage Duration_Days Route  Concurrent_Drugs      Diagnosis Smoking_Status Alcohol_Use   Admission_Date Treatment_Outcome Adverse_Event  Readmission_30d     Notes Extra_Col_1 Extra_Col_2  unnamed_0
+     687919          93.0  48.0    NaN  Female     None     Other      106.2  231.877387      170.2 36.7         127/73        127.0          73.0        62.0           98.6        11.4     3977.0        42.5         8.7         NaN  83.2    7.9              164.0  Sertraline  Sertraline     20            21    NA               3.0            htn           true           -             None                 0          None              0.0      None        None        None   0.159214
+     582916         958.0  63.0    NaN unknown     None   Chinese       87.4  194.295528      174.4  NaN         124/94          NaN          94.0        71.0           98.0        11.8        NaN        21.4        16.1        0.95  26.7    7.6              251.0         N/A         N/A      5           120   N/A               5.0   Osteoporosis            Yes          no       2022/06/10                 0             0              0.0      None        None        None        NaN
+     499828         510.0 999.0    NaN       0     None     Other       81.9  179.964120      179.1 25.5           None         66.0          83.0       104.0           99.1        13.0     4710.0        44.9        13.6        0.52 109.6    3.6              244.0  gabapentin  gabapentin     20           365    iv               4.0 Hypothyroidism         Former       Heavy October 22, 2021                 0             1              0.0      None        None        None   0.651556
+     281644           NaN  52.0    NaN    male     None        NA       70.5  152.675132      167.1 25.2          87/71         87.0          71.0        55.0          100.1        15.9     7521.0        23.9        24.4        1.63  41.7    6.8                NaN Atorvastain Atorvastain     25           120  oral               7.0        Unknown        current        None       2020-02-23                 0          None              0.0 See chart        None        None   0.295824
+     736725         541.0  51.0    NaN       m     None     ASIAN       73.5         NaN      180.9  NaN         126/92        126.0          92.0        44.0           99.0        10.3     4779.0         9.1        17.7        1.18  65.8    8.5               99.0  Gabapentin  Gabapentin    750           365    SC               3.0           None            yes      Social       12/08/2023                 0             0              0.0      None        None        None   0.163931
+
+Missing-value counts and percentages:
+ - Patient_ID: missing=0, percentage=0.00%
+ - patient_id_1: missing=101482, percentage=8.79%
+ - Age: missing=69936, percentage=6.06%
+ - age_1: missing=1102738, percentage=95.48%
+ - Gender: missing=134296, percentage=11.63%
+ - gender_1: missing=1124423, percentage=97.35%
+ - Ethnicity: missing=139954, percentage=12.12%
+ - Weight_kg: missing=57941, percentage=5.02%
+ - Weight_lbs: missing=64152, percentage=5.55%
+ - Height_cm: missing=172218, percentage=14.91%
+ - BMI: missing=86040, percentage=7.45%
+ - blood_pressure: missing=113092, percentage=9.79%
+ - Systolic_BP: missing=103846, percentage=8.99%
+ - Diastolic_BP: missing=58915, percentage=5.10%
+ - Heart_Rate: missing=130529, percentage=11.30%
+ - Temperature_F: missing=134530, percentage=11.65%
+ - Hemoglobin: missing=109547, percentage=9.48%
+ - WBC_Count: missing=119364, percentage=10.33%
+ - ALT_Enzyme: missing=58723, percentage=5.08%
+ - AST_Enzyme: missing=62550, percentage=5.42%
+ - Creatinine: missing=143619, percentage=12.43%
+ - eGFR: missing=127167, percentage=11.01%
+ - HbA1c: missing=62478, percentage=5.41%
+ - Total_Cholesterol: missing=143994, percentage=12.47%
+ - Drug_Name: missing=95667, percentage=8.28%
+ - drug_name_1: missing=128364, percentage=11.11%
+ - Dosage: missing=157004, percentage=13.59%
+ - Duration_Days: missing=160796, percentage=13.92%
+ - Route: missing=153463, percentage=13.29%
+ - Concurrent_Drugs: missing=149040, percentage=12.90%
+ - Diagnosis: missing=132514, percentage=11.47%
+ - Smoking_Status: missing=155344, percentage=13.45%
+ - Alcohol_Use: missing=169319, percentage=14.66%
+ - Admission_Date: missing=232899, percentage=20.16%
+ - Treatment_Outcome: missing=66976, percentage=5.80%
+ - Adverse_Event: missing=88645, percentage=7.67%
+ - Readmission_30d: missing=83839, percentage=7.26%
+ - Notes: missing=998781, percentage=86.47%
+ - Extra_Col_1: missing=1155000, percentage=100.00%
+ - Extra_Col_2: missing=1155000, percentage=100.00%
+ - unnamed_0: missing=118680, percentage=10.28%
+
+Exact duplicate rows: 70017
+
+Numeric descriptive statistics:
+                       count           mean            std          min            25%            50%            75%           max
+Patient_ID         1155000.0  525052.016762  303094.672663     1.000000  262594.750000  525108.500000  787603.250000  1.050000e+06
+patient_id_1       1053518.0     499.910710     288.450510     1.000000     250.000000     500.000000     749.000000  9.990000e+02
+Age                1085064.0      58.395136      63.509624   -31.000000      42.000000      54.000000      67.000000  9.990974e+02
+age_1                52262.0      58.729517      65.177641   -22.000000      42.000000      55.000000      67.000000  9.990000e+02
+Weight_kg          1097059.0      78.834545      30.312373   -13.100000      65.500000      77.900000      90.200000  4.999955e+02
+Weight_lbs         1090848.0     173.839559      66.964197   -28.153937     144.276686     171.778262     199.093755  1.111127e+03
+Height_cm           982782.0     166.694006      26.169210     0.000000     161.300000     169.700000     177.900000  2.284000e+02
+BMI                1068960.0            NaN            NaN         -inf      21.900000      26.900000      32.500672           inf
+Systolic_BP        1051154.0     129.505023      24.972351     7.000000     113.000000     130.000000     146.000000  2.530000e+02
+Diastolic_BP       1096085.0      79.467682      14.997058     4.000000      69.000000      79.000000      90.000000  1.570000e+02
+Heart_Rate         1024471.0      75.722790      28.632110    -1.000000      64.000000      74.000000      85.000000  5.000000e+02
+Temperature_F      1020470.0      98.343973       5.339358     0.000000      98.100000      98.600000      99.100000  1.150000e+02
+Hemoglobin         1045453.0      13.659897       4.813746    -1.090221      12.000000      13.500000      15.000000  9.906199e+01
+WBC_Count          1035636.0   10190.668500   50004.357100 -4529.000000    5788.000000    7499.000000    9205.000000  9.999990e+05
+ALT_Enzyme         1096277.0      66.237517     552.505803    -5.000000      16.300000      24.500000      36.900000  9.999000e+03
+AST_Enzyme         1092450.0      62.667467     557.434341    -5.000000      15.800000      22.200000      31.300000  9.999000e+03
+Creatinine         1011381.0       1.554223       5.445279    -1.000000       0.840000       1.110000       1.450000  9.900000e+01
+eGFR               1027833.0      77.238714      53.170688   -39.500000      58.000000      75.000000      92.100000  9.990000e+02
+HbA1c              1092522.0       6.603831       2.903503    -3.100000       5.300000       6.500000       7.700000  5.000000e+01
+Total_Cholesterol  1011006.0     203.995912      87.559599   -10.000000     169.000000     200.000000     231.000000  1.500000e+03
+Concurrent_Drugs   1005960.0       3.322613       5.592969    -5.000000       2.000000       3.000000       4.000000  9.900000e+01
+Readmission_30d    1071161.0       0.150228       0.357295     0.000000       0.000000       0.000000       0.000000  1.000000e+00
+unnamed_0          1036320.0       0.500042       0.288600     0.000002       0.250323       0.499795       0.750030  9.999997e-01
+
+Treatment_Outcome counts and percentages:
+ - 0: 840304 (72.75%)
+ - 1: 240475 (20.82%)
+ - <MISSING>: 66976 (5.80%)
+ - N/A: 3616 (0.31%)
+ - no: 622 (0.05%)
+ - Yes: 620 (0.05%)
+ - Effective: 608 (0.05%)
+ - No: 608 (0.05%)
+ - yes: 594 (0.05%)
+ - Ineffective: 577 (0.05%)
+
+Infinity counts by numeric column:
+ - Patient_ID: positive_infinity=0, negative_infinity=0
+ - patient_id_1: positive_infinity=0, negative_infinity=0
+ - Age: positive_infinity=0, negative_infinity=0
+ - age_1: positive_infinity=0, negative_infinity=0
+ - Weight_kg: positive_infinity=0, negative_infinity=0
+ - Weight_lbs: positive_infinity=0, negative_infinity=0
+ - Height_cm: positive_infinity=0, negative_infinity=0
+ - BMI: positive_infinity=10190, negative_infinity=61
+ - Systolic_BP: positive_infinity=0, negative_infinity=0
+ - Diastolic_BP: positive_infinity=0, negative_infinity=0
+ - Heart_Rate: positive_infinity=0, negative_infinity=0
+ - Temperature_F: positive_infinity=0, negative_infinity=0
+ - Hemoglobin: positive_infinity=0, negative_infinity=0
+ - WBC_Count: positive_infinity=0, negative_infinity=0
+ - ALT_Enzyme: positive_infinity=0, negative_infinity=0
+ - AST_Enzyme: positive_infinity=0, negative_infinity=0
+ - Creatinine: positive_infinity=0, negative_infinity=0
+ - eGFR: positive_infinity=0, negative_infinity=0
+ - HbA1c: positive_infinity=0, negative_infinity=0
+ - Total_Cholesterol: positive_infinity=0, negative_infinity=0
+ - Concurrent_Drugs: positive_infinity=0, negative_infinity=0
+ - Readmission_30d: positive_infinity=0, negative_infinity=0
+ - unnamed_0: positive_infinity=0, negative_infinity=0
