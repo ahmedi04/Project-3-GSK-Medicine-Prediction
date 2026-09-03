@@ -1,0 +1,125 @@
+Step 6A - XGBoost Report
+================================
+
+Source file: outputs/data_engineered.parquet
+Rows loaded: 1,050,000
+Missing-target rows removed: 64,124
+Labelled rows used: 985,876
+
+Target distribution:
+ - 0: 765,684 (77.67%)
+ - 1: 220,192 (22.33%)
+
+Excluded columns:
+ - patient_id
+ - treatment_outcome
+ - admission_date
+ - adverse_event
+ - readmission_30d
+
+Numeric predictors: 23
+Categorical predictors: 10
+
+Training shape: (788700, 33)
+Testing shape: (197176, 33)
+
+Training class counts:
+ - Class 0: 612,547
+ - Class 1: 176,153
+PDF-provided scale_pos_weight: 2.300000
+
+Model parameters:
+{
+  "objective": "binary:logistic",
+  "base_score": null,
+  "booster": null,
+  "callbacks": null,
+  "colsample_bylevel": null,
+  "colsample_bynode": null,
+  "colsample_bytree": 0.8,
+  "device": null,
+  "early_stopping_rounds": null,
+  "enable_categorical": false,
+  "eval_metric": "auc",
+  "feature_types": null,
+  "gamma": null,
+  "grow_policy": null,
+  "importance_type": null,
+  "interaction_constraints": null,
+  "learning_rate": 0.1,
+  "max_bin": null,
+  "max_cat_threshold": null,
+  "max_cat_to_onehot": null,
+  "max_delta_step": null,
+  "max_depth": 6,
+  "max_leaves": null,
+  "min_child_weight": null,
+  "missing": NaN,
+  "monotone_constraints": null,
+  "multi_strategy": null,
+  "n_estimators": 200,
+  "n_jobs": -1,
+  "num_parallel_tree": null,
+  "random_state": 42,
+  "reg_alpha": null,
+  "reg_lambda": null,
+  "sampling_method": null,
+  "scale_pos_weight": 2.3,
+  "subsample": 0.8,
+  "tree_method": "hist",
+  "validate_parameters": null,
+  "verbosity": null
+}
+
+Training metrics:
+ - accuracy: 0.7321
+ - precision: 0.3880
+ - recall: 0.3457
+ - f1_score: 0.3656
+ - roc_auc: 0.6742
+
+Testing metrics:
+ - accuracy: 0.7229
+ - precision: 0.3630
+ - recall: 0.3189
+ - f1_score: 0.3395
+ - roc_auc: 0.6497
+
+Classification report - Test data:
+                 precision    recall  f1-score   support
+
+Ineffective (0)       0.81      0.84      0.82    153137
+  Effective (1)       0.36      0.32      0.34     44039
+
+       accuracy                           0.72    197176
+      macro avg       0.59      0.58      0.58    197176
+   weighted avg       0.71      0.72      0.72    197176
+
+Confusion matrix - Test data:
+[[128484  24653]
+ [ 29993  14046]]
+
+Training/testing accuracy difference: 0.009244
+
+Top 15 feature importances:
+ - polypharmacy: 0.185007
+ - age: 0.097808
+ - concurrent_drugs: 0.053785
+ - creatinine: 0.029623
+ - age_group_Pediatric: 0.019677
+ - age_group_Young Adult: 0.008788
+ - age_group_Senior: 0.008329
+ - drug_name_metoprolol: 0.007251
+ - diagnosis_pneumonia: 0.007000
+ - drug_name_escitalopram: 0.006943
+ - drug_name_ciprofloxacin: 0.006798
+ - ethnicity_chinese: 0.006712
+ - drug_name_atorvastatin: 0.006667
+ - liver_risk: 0.006650
+ - diagnosis_dvt: 0.006611
+
+Notes:
+- The same train/test split settings used for the other models were used.
+- scale_pos_weight=2.3 was taken from the project PDF.
+- Preprocessing was fitted only on training data to prevent data leakage.
+- ID, date and post-treatment outcome columns were excluded from training.

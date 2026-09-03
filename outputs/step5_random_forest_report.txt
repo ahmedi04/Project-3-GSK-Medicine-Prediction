@@ -1,0 +1,100 @@
+Step 5 - Random Forest Report
+================================
+
+Source file: outputs/data_engineered.parquet
+Rows loaded: 1,050,000
+Missing-target rows removed: 64,124
+Labelled rows used: 985,876
+
+Target distribution:
+ - 0: 765,684 (77.67%)
+ - 1: 220,192 (22.33%)
+
+Excluded columns:
+ - patient_id
+ - treatment_outcome
+ - admission_date
+ - adverse_event
+ - readmission_30d
+
+Numeric predictors: 23
+Categorical predictors: 10
+
+Training shape: (788700, 33)
+Testing shape: (197176, 33)
+
+Model parameters:
+{
+  "bootstrap": true,
+  "ccp_alpha": 0.0,
+  "class_weight": "balanced",
+  "criterion": "gini",
+  "max_depth": 12,
+  "max_features": "sqrt",
+  "max_leaf_nodes": null,
+  "max_samples": null,
+  "min_impurity_decrease": 0.0,
+  "min_samples_leaf": 5,
+  "min_samples_split": 15,
+  "min_weight_fraction_leaf": 0.0,
+  "monotonic_cst": null,
+  "n_estimators": 200,
+  "n_jobs": -1,
+  "oob_score": false,
+  "random_state": 42,
+  "verbose": 0,
+  "warm_start": false
+}
+
+Training metrics:
+ - accuracy: 0.5838
+ - precision: 0.3048
+ - recall: 0.6742
+ - f1_score: 0.4198
+ - roc_auc: 0.6648
+
+Testing metrics:
+ - accuracy: 0.5768
+ - precision: 0.2977
+ - recall: 0.6584
+ - f1_score: 0.4100
+ - roc_auc: 0.6447
+
+Classification report - Test data:
+                 precision    recall  f1-score   support
+
+Ineffective (0)       0.85      0.55      0.67    153137
+  Effective (1)       0.30      0.66      0.41     44039
+
+       accuracy                           0.58    197176
+      macro avg       0.57      0.61      0.54    197176
+   weighted avg       0.73      0.58      0.61    197176
+
+Confusion matrix - Test data:
+[[84729 68408]
+ [15042 28997]]
+
+Training/testing accuracy difference: 0.007060
+
+Top 15 feature importances:
+ - age: 0.264955
+ - concurrent_drugs: 0.102496
+ - creatinine: 0.085294
+ - age_group_Young Adult: 0.079451
+ - age_group_Senior: 0.073133
+ - polypharmacy: 0.059987
+ - age_group_Middle Aged: 0.043812
+ - age_group_Pediatric: 0.040834
+ - elderly_high_dose: 0.037842
+ - wbc_count: 0.011525
+ - weight_kg: 0.011311
+ - egfr: 0.011178
+ - height_cm: 0.010740
+ - bmi: 0.010722
+ - de_ritis_ratio: 0.010672
+
+Notes:
+- The same train/test split settings used for the Decision Tree were used here.
+- Balanced class weights were used because the target is imbalanced.
+- Preprocessing was fitted only on training data to prevent data leakage.
+- ID, date and post-treatment outcome columns were excluded from model training.

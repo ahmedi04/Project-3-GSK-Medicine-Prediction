@@ -1,0 +1,93 @@
+Step 4 - Decision Tree Report
+================================
+
+Source file: outputs/data_engineered.parquet
+Rows loaded: 1,050,000
+Missing-target rows removed: 64,124
+Labelled rows used: 985,876
+
+Target distribution:
+ - 0: 765,684 (77.67%)
+ - 1: 220,192 (22.33%)
+
+Excluded columns:
+ - patient_id
+ - treatment_outcome
+ - admission_date
+ - adverse_event
+ - readmission_30d
+
+Numeric predictors: 23
+Categorical predictors: 10
+
+Training shape: (788700, 33)
+Testing shape: (197176, 33)
+
+Model parameters:
+{
+  "ccp_alpha": 0.0,
+  "class_weight": "balanced",
+  "criterion": "gini",
+  "max_depth": 8,
+  "max_features": null,
+  "max_leaf_nodes": null,
+  "min_impurity_decrease": 0.0,
+  "min_samples_leaf": 10,
+  "min_samples_split": 20,
+  "min_weight_fraction_leaf": 0.0,
+  "monotonic_cst": null,
+  "random_state": 42,
+  "splitter": "best"
+}
+
+Training metrics:
+ - accuracy: 0.5763
+ - precision: 0.2997
+ - recall: 0.6709
+ - f1_score: 0.4143
+ - roc_auc: 0.6510
+
+Testing metrics:
+ - accuracy: 0.5762
+ - precision: 0.2989
+ - recall: 0.6674
+ - f1_score: 0.4129
+ - roc_auc: 0.6470
+
+Classification report - Test data:
+                 precision    recall  f1-score   support
+
+Ineffective (0)       0.85      0.55      0.67    153137
+  Effective (1)       0.30      0.67      0.41     44039
+
+       accuracy                           0.58    197176
+      macro avg       0.58      0.61      0.54    197176
+   weighted avg       0.73      0.58      0.61    197176
+
+Confusion matrix - Test data:
+[[84216 68921]
+ [14649 29390]]
+
+Training/testing accuracy difference: 0.000126
+
+Top 15 feature importances:
+ - age: 0.597543
+ - concurrent_drugs: 0.216846
+ - creatinine: 0.151782
+ - polypharmacy: 0.005801
+ - wbc_count: 0.002772
+ - systolic_bp: 0.002722
+ - egfr: 0.002443
+ - total_cholesterol: 0.001996
+ - weight_kg: 0.001381
+ - diastolic_bp: 0.001337
+ - alt_enzyme: 0.001294
+ - height_cm: 0.001294
+ - hba1c: 0.001237
+ - heart_rate: 0.001126
+ - ast_enzyme: 0.001078
+
+Notes:
+- Balanced class weights were used because the target is imbalanced.
+- Preprocessing was fitted only on training data to prevent data leakage.
+- ID, date and post-treatment outcome columns were excluded from model training.

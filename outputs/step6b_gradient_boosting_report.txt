@@ -1,0 +1,104 @@
+Step 6B - Gradient Boosting Report
+=================================
+
+Source file: outputs/data_engineered.parquet
+Rows loaded: 1,050,000
+Missing-target rows removed: 64,124
+Labelled rows used: 985,876
+
+Target distribution:
+ - 0: 765,684 (77.67%)
+ - 1: 220,192 (22.33%)
+
+Excluded columns:
+ - patient_id
+ - treatment_outcome
+ - admission_date
+ - adverse_event
+ - readmission_30d
+
+Numeric predictors: 23
+Categorical predictors: 10
+
+Training shape: (788700, 33)
+Testing shape: (197176, 33)
+
+Class-imbalance handling:
+ - Balanced sample weights calculated from training data
+
+Model parameters:
+{
+  "ccp_alpha": 0.0,
+  "criterion": "friedman_mse",
+  "init": null,
+  "learning_rate": 0.1,
+  "loss": "log_loss",
+  "max_depth": 3,
+  "max_features": null,
+  "max_leaf_nodes": null,
+  "min_impurity_decrease": 0.0,
+  "min_samples_leaf": 10,
+  "min_samples_split": 20,
+  "min_weight_fraction_leaf": 0.0,
+  "n_estimators": 100,
+  "n_iter_no_change": null,
+  "random_state": 42,
+  "subsample": 0.8,
+  "tol": 0.0001,
+  "validation_fraction": 0.1,
+  "verbose": 0,
+  "warm_start": false
+}
+
+Training metrics:
+ - accuracy: 0.5970
+ - precision: 0.3060
+ - recall: 0.6344
+ - f1_score: 0.4129
+ - roc_auc: 0.6509
+
+Testing metrics:
+ - accuracy: 0.5976
+ - precision: 0.3061
+ - recall: 0.6328
+ - f1_score: 0.4126
+ - roc_auc: 0.6512
+
+Classification report - Test data:
+                 precision    recall  f1-score   support
+
+Ineffective (0)       0.85      0.59      0.69    153137
+  Effective (1)       0.31      0.63      0.41     44039
+
+       accuracy                           0.60    197176
+      macro avg       0.58      0.61      0.55    197176
+   weighted avg       0.73      0.60      0.63    197176
+
+Confusion matrix - Test data:
+[[89964 63173]
+ [16173 27866]]
+
+Training/testing accuracy difference: -0.000592
+
+Top 15 feature importances:
+ - age: 0.610699
+ - concurrent_drugs: 0.185996
+ - creatinine: 0.150472
+ - polypharmacy: 0.039796
+ - de_ritis_ratio: 0.001049
+ - weight_kg: 0.000947
+ - heart_rate: 0.000908
+ - height_cm: 0.000887
+ - total_cholesterol: 0.000869
+ - bmi: 0.000859
+ - ast_enzyme: 0.000815
+ - diastolic_bp: 0.000739
+ - systolic_bp: 0.000637
+ - wbc_count: 0.000620
+ - hemoglobin: 0.000603
+
+Notes:
+- The same train/test split used for the other models was used.
+- Balanced training sample weights handled class imbalance.
+- Preprocessing was fitted only on training data.
+- ID, date and post-treatment outcomes were excluded.

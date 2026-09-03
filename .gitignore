@@ -8,3 +8,4 @@ outputs.zip
 __pycache__/
 *.pyc
 .DS_Store
+models/*.joblib
