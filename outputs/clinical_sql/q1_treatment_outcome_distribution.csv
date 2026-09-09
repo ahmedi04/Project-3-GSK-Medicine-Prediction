@@ -1,0 +1,4 @@
+treatment_outcome_group,total_records,known_outcome_count,missing_outcome_count,pct_of_all_records
+Ineffective (0),765684,765684.0,0.0,72.92
+Effective (1),220192,220192.0,0.0,20.97
+Unknown,64124,0.0,64124.0,6.11

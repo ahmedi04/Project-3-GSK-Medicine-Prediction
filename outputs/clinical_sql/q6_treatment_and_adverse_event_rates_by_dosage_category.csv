@@ -1,0 +1,5 @@
+dosage_category,total_records,known_outcome_count,missing_outcome_count,known_adverse_count,missing_adverse_count,observed_effective_rate_pct,observed_adverse_rate_pct
+Low (<100mg),408301,383454.0,24847.0,375631.0,32670.0,22.29,25.05
+Medium (100-500mg),326750,306884.0,19866.0,300200.0,26550.0,22.33,25.03
+High (>500mg),162018,152067.0,9951.0,149042.0,12976.0,22.43,25.11
+Unknown,152931,143471.0,9460.0,140692.0,12239.0,22.36,25.16

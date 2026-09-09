@@ -18,6 +18,12 @@ It includes EDA, cleaning, feature engineering, model training and tuning, model
 - Python 3.9+
 - Install packages from [requirements.txt](requirements.txt)
 
+### Original dataset location (excluded from GitHub)
+The original CSV expected by this project should be placed at:
+- outputs/clinical_data_raw.csv
+
+This source file is excluded from GitHub and must be provided locally before running the workflow.
+
 ### Configure .env
 1. Copy [.env.example](.env.example) to `.env`.
 2. Fill local values.
@@ -54,6 +60,33 @@ Required keys:
 21. [19_clinical_sql_analytics.py](19_clinical_sql_analytics.py)
 22. [app.py](app.py)
 
+### Exact runnable commands
+Run from project root:
+
+- `./gsk_env/bin/python 00_convert_to_parquet.py`
+- `./gsk_env/bin/python 01_eda.py`
+- `./gsk_env/bin/python 02_data_cleaning.py`
+- `./gsk_env/bin/python 03_feature_engineering.py`
+- `./gsk_env/bin/python 04_decision_tree.py`
+- `./gsk_env/bin/python 05_random_forest.py`
+- `./gsk_env/bin/python 06_xgboost.py`
+- `./gsk_env/bin/python 06b_gradient_boosting.py`
+- `./gsk_env/bin/python 07_data_audit.py`
+- `./gsk_env/bin/python 08_feature_selection_analysis.py`
+- `./gsk_env/bin/python 09_train_validation_test_baseline.py`
+- `./gsk_env/bin/python 10_xgboost_validation_tuning.py`
+- `./gsk_env/bin/python 11_prepare_validation_input.py`
+- `./gsk_env/bin/python 12_scenario3_model_baseline.py`
+- `./gsk_env/bin/python 13_keras_neural_network.py --train`
+- `./gsk_env/bin/python 14_lstm_demonstration.py --train`
+- `./gsk_env/bin/python 15_model_evaluation_comparison.py --train`
+- `./gsk_env/bin/python 16_xgboost_explainability.py --run`
+- `./gsk_env/bin/python 17_mysql_connection_check.py`
+- `./gsk_env/bin/python 18_load_patients_mysql.py --load`
+- `./gsk_env/bin/python 19_clinical_sql_analytics.py --run`
+- `./gsk_env/bin/python app.py --setup-table`
+- `./gsk_env/bin/python app.py`
+
 ## MySQL and SQL analytics in Workbench
 1. Check connection with [17_mysql_connection_check.py](17_mysql_connection_check.py).
 2. Load all records with [18_load_patients_mysql.py](18_load_patients_mysql.py) using `--load`.
@@ -71,6 +104,10 @@ Start:
 Endpoints:
 - `GET /health`
 - `POST /predict` with JSON, for example `{"patient_id": 26319}`
+
+Endpoint commands:
+- `curl -s http://127.0.0.1:5001/health`
+- `curl -s -X POST http://127.0.0.1:5001/predict -H "Content-Type: application/json" -d '{"patient_id":26319}'`
 
 prediction_results table and Workbench checks:
 - Setup/query SQL: [20_prediction_results_setup.sql](20_prediction_results_setup.sql)

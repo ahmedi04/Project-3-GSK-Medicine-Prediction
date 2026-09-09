@@ -1,0 +1,6 @@
+age_group,total_records,known_outcome_count,missing_outcome_count,observed_effective_rate_pct
+Under 30,83846,78799.0,5047.0,37.51
+30-50,320253,300808.0,19445.0,27.46
+>50-65,307331,288478.0,18853.0,20.02
+Over 65,261720,245660.0,16060.0,13.67
+Unknown,76850,72131.0,4719.0,23.13

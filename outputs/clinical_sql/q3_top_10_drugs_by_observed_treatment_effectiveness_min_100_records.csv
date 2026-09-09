@@ -1,0 +1,11 @@
+drug_group,total_records,known_outcome_count,missing_outcome_count,observed_effective_count,observed_effective_rate_pct
+simvastatin,12840,12057.0,783.0,2758.0,22.87
+azithromycin,12739,11980.0,759.0,2726.0,22.75
+metoprolol,12553,11791.0,762.0,2676.0,22.7
+omeprazole,64861,60874.0,3987.0,13750.0,22.59
+hydrochlorothiazide,13062,12282.0,780.0,2767.0,22.53
+lisinopril,64080,60081.0,3999.0,13524.0,22.51
+ibuprofen,64050,60167.0,3883.0,13538.0,22.5
+amlodipine,12946,12198.0,748.0,2745.0,22.5
+insulin glargine,51482,48314.0,3168.0,10856.0,22.47
+fluticasone,12914,12119.0,795.0,2719.0,22.44

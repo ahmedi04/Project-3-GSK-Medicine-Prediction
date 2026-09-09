@@ -24,6 +24,15 @@ outputs/**/*.parquet
 outputs/**/*.npy
 outputs/*.parquet
 outputs.zip
+
+# Allow small aggregate metrics / SQL summary CSVs
+!outputs/scenario2_602020_baseline_metrics.csv
+!outputs/scenario3_baseline_metrics.csv
+!outputs/scenario3_nn_metrics.csv
+!outputs/scenario3_lstm_demo_metrics.csv
+!outputs/scenario3_final_model_comparison.csv
+!outputs/xgboost_tuning_all_results.csv
+!outputs/clinical_sql/*.csv
 # Model binaries
 .DS_Store
 models/*.keras

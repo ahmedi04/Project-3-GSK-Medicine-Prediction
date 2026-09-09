@@ -1,0 +1,16 @@
+drug_group,age_category,total_records,known_adverse_count,missing_adverse_count,observed_adverse_count,observed_adverse_rate_pct
+prednisone,Unknown,973,889.0,84.0,277.0,31.16
+ciprofloxacin,Elderly,3343,3098.0,245.0,962.0,31.05
+levothyroxine,Elderly,3282,3023.0,259.0,938.0,31.03
+clopidogrel,Elderly,3230,2944.0,286.0,906.0,30.77
+sertraline,Elderly,3275,2983.0,292.0,915.0,30.67
+warfarin,Elderly,16091,14792.0,1299.0,4507.0,30.47
+prednisone,Elderly,3228,2973.0,255.0,905.0,30.44
+amlodipine,Elderly,3133,2877.0,256.0,875.0,30.41
+hydrochlorothiazide,Elderly,3255,2998.0,257.0,910.0,30.35
+albuterol,Elderly,3245,2975.0,270.0,897.0,30.15
+losartan,Elderly,3250,2977.0,273.0,892.0,29.96
+simvastatin,Elderly,3167,2912.0,255.0,871.0,29.91
+atorvastatin,Elderly,16100,14896.0,1204.0,4446.0,29.85
+escitalopram,Elderly,3245,2981.0,264.0,887.0,29.76
+gabapentin,Elderly,15955,14672.0,1283.0,4357.0,29.7
