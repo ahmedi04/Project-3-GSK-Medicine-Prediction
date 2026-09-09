@@ -1,0 +1,66 @@
+Scenario 3 LSTM Demonstration Report
+====================================
+Source file: outputs/scenario3_validation_input.parquet
+Split file: outputs/scenario3_split_assignments.parquet
+Base shape: (1050000, 31)
+Labelled rows: 985,876
+Missing-target rows: 64,124
+
+Important limitation:
+- The dataset has one row per patient, so this LSTM uses exactly one timestep per patient.
+- It is an educational sequence wrapper only; it does not learn changes over time.
+- No patient rows were combined into sequences and no visits were invented.
+
+Split counts and class distributions:
+- Train: rows=591,525, negative(0)=459,410 (77.665%), positive(1)=132,115 (22.335%)
+- Validation: rows=197,175, negative(0)=153,137 (77.666%), positive(1)=44,038 (22.334%)
+- Test: rows=197,176, negative(0)=153,137 (77.665%), positive(1)=44,039 (22.335%)
+- Test data was preserved for later comparison and not used for training or selection.
+
+Preprocessing and feature handling:
+- Reused the saved Scenario 3 preprocessing bundle without refitting either the preprocessor or scaler.
+- Timesteps recorded in the preprocessing bundle: 1
+- Encoded feature count: 121
+- Numeric feature positions: 23
+- Numeric encoded columns were standardized using the saved scaler only; one-hot indicators remained unchanged.
+- All arrays were cast to float32 before dense conversion and sequence reshaping.
+
+LSTM architecture:
+- Input(shape=(1, 121))
+- LSTM(64, return_sequences=True, stateful=False)
+- Dropout(0.3)
+- LSTM(32, return_sequences=False, stateful=False)
+- Dropout(0.3)
+- Dense(16, activation='relu')
+- Dropout(0.2)
+- Dense(1, activation='sigmoid')
+- Optimizer: Adam(lr=0.001)
+- Loss: binary_crossentropy
+- Metrics: accuracy, AUC(name='auc')
+- Batch size: 512 (runtime adaptation from the PDF's 32; every epoch still uses all training records)
+- Maximum epochs: 50
+- Actual epochs completed: 12
+- Selected best epoch: 2
+
+Class weights from training labels only:
+- class_0=0.643788, class_1=2.238675
+
+Metrics at cutoff 0.50:
+- Train: accuracy=0.5926, precision=0.3045, recall=0.6417, f1=0.4130, roc_auc=0.6508
+  Confusion matrix [tn, fp, fn, tp]: [265785, 193625, 47342, 84773]
+- Validation: accuracy=0.5916, precision=0.3028, recall=0.6364, f1=0.4104, roc_auc=0.6474
+  Confusion matrix [tn, fp, fn, tp]: [88617, 64520, 16013, 28025]
+
+Saved artifacts:
+- Model: models/scenario3_lstm_demo.keras
+- Preprocessing bundle: models/scenario3_lstm_demo_preprocessing.joblib
+- Metrics CSV: outputs/scenario3_lstm_demo_metrics.csv
+- Training history CSV: outputs/scenario3_lstm_demo_training_history.csv
+- Training history figure: outputs/scenario3_lstm_demo_training_history.png
+- Validation confusion matrix: outputs/scenario3_lstm_demo_validation_confusion_matrix.png
+- Validation predictions: outputs/scenario3_lstm_demo_validation_predictions.parquet
+
+Notes:
+- The test split remains untouched for the final comparison stage.
+- The preprocessing bundle stores the fitted preprocessor, fitted scaler, numeric positions, encoded feature names, and timesteps=1.
+- This demonstration keeps the patient order and target alignment unchanged throughout the workflow.

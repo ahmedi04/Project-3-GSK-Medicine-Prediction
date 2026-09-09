@@ -1,0 +1,53 @@
+MySQL Patient Load Verification Report
+=====================================
+
+Source file: outputs/scenario3_validation_input.parquet
+Target database: gsk_medicine_db
+Target table: patients
+
+Row count checks
+----------------
+Source total rows: 1,050,000
+Database total rows: 1,050,000
+Source distinct patient_id: 1,050,000
+Database distinct patient_id: 1,050,000
+
+Missing-value counts by column (source vs database)
+---------------------------------------------------
+patient_id: source_NULL=0, db_NULL=0
+age: source_NULL=76,850, db_NULL=76,850
+gender: source_NULL=343,088, db_NULL=343,088
+ethnicity: source_NULL=271,269, db_NULL=271,269
+weight_kg: source_NULL=18,653, db_NULL=18,653
+height_cm: source_NULL=165,566, db_NULL=165,566
+bmi: source_NULL=43,341, db_NULL=43,341
+systolic_bp: source_NULL=12,589, db_NULL=12,589
+diastolic_bp: source_NULL=7,164, db_NULL=7,164
+heart_rate: source_NULL=128,157, db_NULL=128,157
+temperature_f: source_NULL=129,381, db_NULL=129,381
+hemoglobin: source_NULL=109,193, db_NULL=109,193
+wbc_count: source_NULL=118,112, db_NULL=118,112
+alt_enzyme: source_NULL=60,783, db_NULL=60,783
+ast_enzyme: source_NULL=64,226, db_NULL=64,226
+creatinine: source_NULL=139,985, db_NULL=139,985
+egfr: source_NULL=123,989, db_NULL=123,989
+hba1c: source_NULL=70,086, db_NULL=70,086
+total_cholesterol: source_NULL=138,128, db_NULL=138,128
+drug_name: source_NULL=123,329, db_NULL=123,329
+dosage_mg: source_NULL=152,931, db_NULL=152,931
+duration_days: source_NULL=151,286, db_NULL=151,286
+route: source_NULL=301,592, db_NULL=301,592
+concurrent_drugs: source_NULL=142,414, db_NULL=142,414
+diagnosis: source_NULL=198,162, db_NULL=198,162
+smoking_status: source_NULL=309,716, db_NULL=309,716
+alcohol_use: source_NULL=303,077, db_NULL=303,077
+admission_date: source_NULL=304,892, db_NULL=304,892
+treatment_outcome: source_NULL=64,124, db_NULL=64,124
+adverse_event: source_NULL=84,435, db_NULL=84,435
+readmission_30d: source_NULL=76,241, db_NULL=76,241
+
+Outcome column distributions (0, 1, NULL)
+-----------------------------------------
+treatment_outcome: source(0=765,684, 1=220,192, NULL=64,124) | db(0=765,684, 1=220,192, NULL=64,124)
+adverse_event: source(0=723,506, 1=242,059, NULL=84,435) | db(0=723,506, 1=242,059, NULL=84,435)
+readmission_30d: source(0=827,423, 1=146,336, NULL=76,241) | db(0=827,423, 1=146,336, NULL=76,241)

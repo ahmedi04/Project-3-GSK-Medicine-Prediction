@@ -1,0 +1,21 @@
+Scenario 3 preparation report
+============================
+Raw source shape: rows=1,155,000, columns=41
+Existing cleaned shape: rows=1,050,000, columns=31
+This scenario reuses deterministic cleaning, but leaves predictor missing values missing.
+It does not apply dataset-wide medians, modes, IQR clipping, or feature engineering.
+Prepared base dataset shape: rows=1,050,000, columns=31
+Preserved missing treatment_outcome rows: 64,124
+patient_id only in scenario3 input: 0
+patient_id only in existing cleaned data: 0
+treatment_outcome mismatches for matched patient_id rows: 0
+Reference labelled rows missing in scenario3 input: 0
+Reference-vs-scenario3 labelled target mismatches: 0
+Train: rows=591,525, negative(0)=459,410 (77.665%), positive(1)=132,115 (22.335%)
+Validation: rows=197,175, negative(0)=153,137 (77.666%), positive(1)=44,038 (22.334%)
+Test: rows=197,176, negative(0)=153,137 (77.665%), positive(1)=44,039 (22.335%)
+Patient ID overlap counts: {'train_validation': 0, 'train_test': 0, 'validation_test': 0}
+Scenario 3 base file: outputs/scenario3_validation_input.parquet
+Scenario 3 split assignment file: outputs/scenario3_split_assignments.parquet
+Scenario 3 base columns: ['patient_id', 'age', 'gender', 'ethnicity', 'weight_kg', 'height_cm', 'bmi', 'systolic_bp', 'diastolic_bp', 'heart_rate', 'temperature_f', 'hemoglobin', 'wbc_count', 'alt_enzyme', 'ast_enzyme', 'creatinine', 'egfr', 'hba1c', 'total_cholesterol', 'drug_name', 'dosage_mg', 'duration_days', 'route', 'concurrent_drugs', 'diagnosis', 'smoking_status', 'alcohol_use', 'admission_date', 'treatment_outcome', 'adverse_event', 'readmission_30d']
+Scenario 3 split columns: ['patient_id', 'split']

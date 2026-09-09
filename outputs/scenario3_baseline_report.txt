@@ -1,0 +1,60 @@
+Scenario 3 baseline training completed using training-only preprocessing and validation-only evaluation.
+Scenario 3 Baseline Report
+==========================
+Source file: outputs/scenario3_validation_input.parquet
+Split file: outputs/scenario3_split_assignments.parquet
+Base shape: (1050000, 31)
+Labelled rows: 985,876
+Missing-target rows: 64,124
+
+Split counts and class distributions:
+- Train: rows=591,525, negative(0)=459,410 (77.665%), positive(1)=132,115 (22.335%)
+- Validation: rows=197,175, negative(0)=153,137 (77.666%), positive(1)=44,038 (22.334%)
+- Test: rows=197,176, negative(0)=153,137 (77.665%), positive(1)=44,039 (22.335%)
+- Test membership matches the earlier Step 09 recipe and is retained for later evaluation.
+
+Predictors and preprocessing:
+- Excluded columns: patient_id, treatment_outcome, admission_date, adverse_event, readmission_30d
+- Base predictors before feature engineering: 26
+- Predictors after feature engineering: 33
+- Encoded feature count after one-hot encoding: 121
+- Categorical missing values were imputed with training modes; numeric missing values with training medians.
+- Step 02 IQR clipping was fit on training data only for age, bmi, dosage_mg, hemoglobin, creatinine, alt_enzyme, and ast_enzyme.
+- Step 03 features were recreated exactly: kidney_stage, bmi_category, age_group, liver_risk, polypharmacy, elderly_high_dose, de_ritis_ratio.
+- Training-set dosage_mg median used for elderly_high_dose: 100.000000
+- Training-set de_ritis_ratio median before capping: 0.904382
+- Training-set de_ritis_ratio IQR lower/upper limits: 0.000000 / 2.870769
+
+Model settings:
+- DecisionTree: max_depth=8, min_samples_split=20, min_samples_leaf=10, class_weight=balanced, random_state=42
+- RandomForest: n_estimators=200, max_depth=12, min_samples_split=15, min_samples_leaf=5, max_features=sqrt, class_weight=balanced, n_jobs=-1, random_state=42
+- XGBoost: n_estimators=200, max_depth=6, learning_rate=0.1, subsample=0.8, colsample_bytree=0.8, scale_pos_weight=2.3, objective=binary:logistic, eval_metric=auc, tree_method=hist, random_state=42, n_jobs=-1
+- Cutoff used for this baseline: 0.50
+
+Always-predict-0 reference baseline (validation):
+- accuracy=0.7767, precision=0.0000, recall=0.0000, f1=0.0000, roc_auc=0.5000
+
+Validation metrics by model:
+- DecisionTree
+  Train: accuracy=0.5806, precision=0.3015, recall=0.6663, f1=0.4151, roc_auc=0.6524
+  Validation: accuracy=0.5781, precision=0.2981, recall=0.6565, f1=0.4100, roc_auc=0.6429
+  Train minus validation: f1=0.0051, roc_auc=0.0095
+  Validation confusion matrix [tn, fp, fn, tp]: [85072, 68065, 15129, 28909]
+- RandomForest
+  Train: accuracy=0.5882, precision=0.3072, recall=0.6725, f1=0.4218, roc_auc=0.6701
+  Validation: accuracy=0.5795, precision=0.2982, recall=0.6522, f1=0.4093, roc_auc=0.6429
+  Train minus validation: f1=0.0125, roc_auc=0.0272
+  Validation confusion matrix [tn, fp, fn, tp]: [85541, 67596, 15317, 28721]
+- XGBoost
+  Train: accuracy=0.7365, precision=0.3982, recall=0.3516, f1=0.3735, roc_auc=0.6826
+  Validation: accuracy=0.7210, precision=0.3577, recall=0.3131, f1=0.3339, roc_auc=0.6458
+  Train minus validation: f1=0.0396, roc_auc=0.0368
+  Validation confusion matrix [tn, fp, fn, tp]: [128378, 24759, 30251, 13787]
+
+Validation confusion matrices are saved separately in the validation chart.
+This stage uses only training and validation predictions; test evaluation is reserved for later experiments.
+
+Saved metrics CSV: outputs/scenario3_baseline_metrics.csv
+Saved validation confusion matrices: outputs/scenario3_validation_confusion_matrices.png
+Saved validation predictions: outputs/scenario3_validation_predictions.parquet
+Saved pipelines: models/scenario3_decision_tree_pipeline.joblib, models/scenario3_random_forest_pipeline.joblib, models/scenario3_xgboost_pipeline.joblib

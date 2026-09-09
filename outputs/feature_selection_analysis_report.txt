@@ -1,0 +1,65 @@
+FEATURE SELECTION ANALYSIS REPORT
+================================
+Source dataset path: outputs/data_engineered.parquet
+Source dataset shape: (1050000, 38)
+Expected source shape: (1050000, 38)
+
+Labelled rows used (treatment_outcome not null): 985876
+
+Columns excluded from predictor analysis and reasons:
+- patient_id: identifier
+- admission_date: raw date
+- adverse_event: post-treatment outcome (leakage)
+- readmission_30d: post-treatment outcome (leakage)
+
+Numerical features ranked by absolute Pearson correlation with treatment_outcome:
+- age: r=-0.1707 | |r|=0.1707
+- creatinine: r=-0.0814 | |r|=0.0814
+- polypharmacy: r=-0.0735 | |r|=0.0735
+- concurrent_drugs: r=-0.0709 | |r|=0.0709
+- elderly_high_dose: r=-0.0685 | |r|=0.0685
+- heart_rate: r=-0.0018 | |r|=0.0018
+- liver_risk: r=-0.0014 | |r|=0.0014
+- egfr: r=0.0011 | |r|=0.0011
+- systolic_bp: r=0.0011 | |r|=0.0011
+- temperature_f: r=0.0011 | |r|=0.0011
+- alt_enzyme: r=-0.0010 | |r|=0.0010
+- dosage_mg: r=0.0010 | |r|=0.0010
+- diastolic_bp: r=-0.0006 | |r|=0.0006
+- hba1c: r=-0.0005 | |r|=0.0005
+- wbc_count: r=0.0005 | |r|=0.0005
+- ast_enzyme: r=-0.0004 | |r|=0.0004
+- weight_kg: r=0.0004 | |r|=0.0004
+- de_ritis_ratio: r=-0.0002 | |r|=0.0002
+- duration_days: r=-0.0001 | |r|=0.0001
+- hemoglobin: r=0.0001 | |r|=0.0001
+- total_cholesterol: r=-0.0001 | |r|=0.0001
+- bmi: r=0.0001 | |r|=0.0001
+- height_cm: r=-0.0000 | |r|=0.0000
+
+Categorical features ranked by Cramer's V association with treatment_outcome:
+- age_group: Cramer's V = 0.1583
+- smoking_status: Cramer's V = 0.0023
+- alcohol_use: Cramer's V = 0.0022
+- gender: Cramer's V = 0.0016
+- drug_name: Cramer's V = 0.0010
+- ethnicity: Cramer's V = 0.0000
+- route: Cramer's V = 0.0000
+- diagnosis: Cramer's V = 0.0000
+- kidney_stage: Cramer's V = 0.0000
+- bmi_category: Cramer's V = 0.0000
+
+Highly correlated numerical feature pairs (|r| > 0.90):
+- None found
+
+Constant or near-constant columns (low variance or single unique value):
+- None found
+
+Recommendations:
+- Useful numeric predictors (top ~5 by |r|): ['age', 'creatinine', 'polypharmacy', 'concurrent_drugs', 'elderly_high_dose']
+- Useful categorical predictors (top ~5 by Cramer's V): ['age_group', 'smoking_status', 'alcohol_use', 'gender', 'drug_name']
+- No strongly redundant numeric pairs detected.
+
+Notes:
+- Columns excluded from analysis were not removed from the saved dataset; exclusion was only for feature analysis.
+- Cramer's V is used for categorical associations; it is symmetric and ranges 0..1.

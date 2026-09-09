@@ -1,0 +1,49 @@
+Scenario 2 Baseline Report (60/20/20 split)
+===========================================
+Source file: outputs/data_engineered.parquet
+Source rows/cols: 1,050,000 / 38
+Rows with missing treatment_outcome: 64,124
+Labelled rows used: 985,876
+
+Excluded columns from predictors:
+- patient_id: identifier
+- treatment_outcome: target
+- admission_date: raw date
+- adverse_event: post-treatment outcome/data leakage
+- readmission_30d: post-treatment outcome/data leakage
+Predictor columns before preprocessing: 33
+
+Split sizes and class distributions:
+- Train: 591,525 rows | positive=22.335% | negative=77.665%
+- Validation: 197,175 rows | positive=22.334% | negative=77.666%
+- Test: 197,176 rows | positive=22.335% | negative=77.665%
+
+Metrics by model (train / validation / test):
+
+Model: DecisionTree
+- Train: accuracy=0.5807, precision=0.3015, recall=0.6663, f1=0.4151, roc_auc=0.6524
+- Validation: accuracy=0.5780, precision=0.2981, recall=0.6565, f1=0.4100, roc_auc=0.6429
+- Test: accuracy=0.5796, precision=0.2997, recall=0.6604, f1=0.4123, roc_auc=0.6460
+- Test confusion matrix [tn, fp, fn, tp]: [85190, 67947, 14955, 29084]
+- Differences: train-validation f1=0.0051, validation-test f1=-0.0023, train-validation auc=0.0096, validation-test auc=-0.0031
+
+Model: RandomForest
+- Train: accuracy=0.5917, precision=0.3087, recall=0.6680, f1=0.4222, roc_auc=0.6692
+- Validation: accuracy=0.5828, precision=0.2990, recall=0.6458, f1=0.4088, roc_auc=0.6428
+- Test: accuracy=0.5836, precision=0.2999, recall=0.6478, f1=0.4100, roc_auc=0.6446
+- Test confusion matrix [tn, fp, fn, tp]: [86547, 66590, 15511, 28528]
+- Differences: train-validation f1=0.0134, validation-test f1=-0.0012, train-validation auc=0.0265, validation-test auc=-0.0018
+
+Model: XGBoost
+- Train: accuracy=0.7361, precision=0.3973, recall=0.3514, f1=0.3729, roc_auc=0.6822
+- Validation: accuracy=0.7212, precision=0.3586, recall=0.3146, f1=0.3352, roc_auc=0.6460
+- Test: accuracy=0.7232, precision=0.3627, recall=0.3161, f1=0.3378, roc_auc=0.6485
+- Test confusion matrix [tn, fp, fn, tp]: [128677, 24460, 30118, 13921]
+- Differences: train-validation f1=0.0378, validation-test f1=-0.0026, train-validation auc=0.0362, validation-test auc=-0.0025
+
+Basic overfitting observations:
+- Larger train-vs-validation drops in F1/AUC suggest stronger overfitting; smaller gaps suggest better generalization.
+- This script creates an additional 60/20/20 scenario only; existing 80/20 results, reports, charts, and saved models were preserved.
+
+Saved comparison CSV: outputs/scenario2_602020_baseline_metrics.csv
+Saved confusion matrix figure: outputs/scenario2_602020_confusion_matrices.png

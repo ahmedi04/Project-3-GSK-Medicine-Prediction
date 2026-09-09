@@ -13,7 +13,6 @@ from pathlib import Path
 import re
 import sys
 import json
-import subprocess
 from typing import Dict, Tuple
 
 import numpy as np
@@ -41,28 +40,22 @@ def parse_testing_metrics(report_text: str) -> Dict[str, float]:
       - precision: 0.2989
     """
     metrics = {}
-    start = report_text.find('Testing metrics:')
-    if start == -1:
-        return metrics
-    tail = report_text[start + len('Testing metrics:'):]
-    # possible end markers (choose earliest)
-    end_markers = ['Classification report', 'Classification report - Test data', 'Confusion matrix', '\n\n']
-    end_idx = None
-    for mark in end_markers:
-        idx = tail.find(mark)
-        if idx != -1:
-            if end_idx is None or idx < end_idx:
-                end_idx = idx
-    block = tail if end_idx is None else tail[:end_idx]
+    # find 'Testing metrics:' and then gather subsequent lines until a blank line
+    m = re.search(r"Testing metrics:\s*\n(.*?)\n\s*\n", report_text + "\n\n", re.S)
+    if not m:
+        # fallback: find 'Testing metrics:' and read following lines
+        m2 = re.search(r"Testing metrics:\s*\n(.*)", report_text, re.S)
+        block = m2.group(1) if m2 else ''
+    else:
+        block = m.group(1)
 
     for line in block.splitlines():
         line = line.strip()
         if not line:
             continue
-        # match '- key: value' or 'key: value', allow hyphens in key
-        mm = re.match(r"^-?\s*([A-Za-z0-9_\-]+):\s*([0-9.+eE-]+)", line)
+        mm = re.match(r"^-?\s*([a-zA-Z_]+):\s*([0-9.+eE-]+)", line)
         if mm:
-            key = mm.group(1).replace('-', '_')
+            key = mm.group(1)
             try:
                 val = float(mm.group(2))
             except Exception:
@@ -141,20 +134,19 @@ def make_xgboost_pie(matrix: np.ndarray, out_path: Path):
 
 
 def build_pdf(summary: Dict[str, Dict[str, float]], xg_matrix: np.ndarray, acc_chart: Path, pie_chart: Path, out_pdf: Path):
-    """Create a one-page PDF summary using ReportLab; compact layout."""
-    doc = SimpleDocTemplate(str(out_pdf), pagesize=letter, rightMargin=24, leftMargin=24, topMargin=24, bottomMargin=24)
+    """Create a one-page PDF summary using ReportLab."""
+    doc = SimpleDocTemplate(str(out_pdf), pagesize=letter, rightMargin=36, leftMargin=36, topMargin=36, bottomMargin=36)
     styles = getSampleStyleSheet()
-    style_h = ParagraphStyle('Heading', parent=styles['Heading1'], alignment=1, textColor=colors.HexColor('#0B3D91'), fontName='Helvetica', fontSize=14)
-    style_sub = ParagraphStyle('Subtitle', parent=styles['Normal'], alignment=1, textColor=colors.HexColor('#333333'), fontName='Helvetica', fontSize=10)
-    normal = ParagraphStyle('Normal_Helvetica', parent=styles['Normal'], fontName='Helvetica', fontSize=9, leading=11)
-    h3 = ParagraphStyle('H3', parent=styles['Heading3'], fontName='Helvetica', fontSize=11)
+    style_h = ParagraphStyle('Heading', parent=styles['Heading1'], alignment=1, textColor=colors.HexColor('#0B3D91'))
+    style_sub = ParagraphStyle('Subtitle', parent=styles['Normal'], alignment=1, textColor=colors.HexColor('#333333'))
+    normal = styles['Normal']
 
     elements = []
     elements.append(Paragraph('Steps 4-6: Model Training & Evaluation', style_h))
     elements.append(Paragraph('GSK Medicine Prediction System | Day 2 Summary', style_sub))
-    elements.append(Spacer(1, 8))
+    elements.append(Spacer(1, 12))
 
-    elements.append(Paragraph('<b>Work Completed</b>', h3))
+    elements.append(Paragraph('<b>Work Completed</b>', styles['Heading3']))
     work_lines = [
         '985,876 labelled patient records were used',
         '64,124 missing-target records were excluded only for supervised model training',
@@ -167,9 +159,9 @@ def build_pdf(summary: Dict[str, Dict[str, float]], xg_matrix: np.ndarray, acc_c
     ]
     for ln in work_lines:
         elements.append(Paragraph(f' - {ln}', normal))
-    elements.append(Spacer(1, 6))
+    elements.append(Spacer(1, 8))
 
-    elements.append(Paragraph('<b>Model Results (Test)</b>', h3))
+    elements.append(Paragraph('<b>Model Results (Test)</b>', styles['Heading3']))
     data = [['Model', 'Accuracy', 'Precision', 'Recall', 'F1-score', 'ROC-AUC']]
     for model in ['Decision Tree', 'Random Forest', 'Gradient Boosting', 'XGBoost']:
         metrics = summary.get(model, {})
@@ -182,28 +174,25 @@ def build_pdf(summary: Dict[str, Dict[str, float]], xg_matrix: np.ndarray, acc_c
             f"{metrics.get('roc_auc', 0.0)*100:.2f}%",
         ])
 
-    tbl = Table(data, colWidths=[90, 58, 58, 58, 58, 58])
+    tbl = Table(data, colWidths=[100, 70, 70, 70, 70, 70])
     tbl.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#F2F2F2')),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
         ('ALIGN', (1, 1), (-1, -1), 'CENTER'),
         ('GRID', (0, 0), (-1, -1), 0.25, colors.grey),
-        ('FONTNAME', (0, 0), (-1, -1), 'Helvetica'),
-        ('FONTSIZE', (0, 0), (-1, -1), 9),
     ]))
     elements.append(tbl)
-    elements.append(Spacer(1, 6))
+    elements.append(Spacer(1, 8))
 
-    elements.append(Paragraph('<b>Charts</b>', h3))
-    # reduce chart sizes to fit on one page
-    img1 = Image(str(acc_chart), width=220, height=140)
-    img2 = Image(str(pie_chart), width=140, height=140)
-    t = Table([[img1, img2]], colWidths=[260, 160])
+    elements.append(Paragraph('<b>Charts</b>', styles['Heading3']))
+    img1 = Image(str(acc_chart), width=260, height=180)
+    img2 = Image(str(pie_chart), width=180, height=180)
+    t = Table([[img1, img2]], colWidths=[280, 200])
     t.setStyle(TableStyle([('VALIGN', (0, 0), (-1, -1), 'MIDDLE')]))
     elements.append(t)
-    elements.append(Spacer(1, 6))
+    elements.append(Spacer(1, 8))
 
-    elements.append(Paragraph('<b>Key Findings</b>', h3))
+    elements.append(Paragraph('<b>Key Findings</b>', styles['Heading3']))
     kf = [
         'XGBoost achieved the highest accuracy and precision',
         'Decision Tree achieved the highest recall',
@@ -214,15 +203,15 @@ def build_pdf(summary: Dict[str, Dict[str, float]], xg_matrix: np.ndarray, acc_c
     ]
     for ln in kf:
         elements.append(Paragraph(f' - {ln}', normal))
-    elements.append(Spacer(1, 6))
-
-    elements.append(Paragraph('<b>Conclusion</b>', h3))
-    conclusion = 'Steps 4, 5 and 6 were completed successfully. XGBoost is the accuracy-leading model, while Decision Tree is strongest for identifying a larger percentage of effective-treatment cases.'
-    elements.append(Paragraph(conclusion, normal))
     elements.append(Spacer(1, 8))
 
-    footer = Paragraph('GSK Medicine Prediction System - Steps 4 to 6', ParagraphStyle('footer', alignment=1, fontSize=8, textColor=colors.grey, fontName='Helvetica'))
-    elements.append(Spacer(1, 6))
+    elements.append(Paragraph('<b>Conclusion</b>', styles['Heading3']))
+    conclusion = 'Steps 4, 5 and 6 were completed successfully. XGBoost is the accuracy-leading model, while Decision Tree is strongest for identifying a larger percentage of effective-treatment cases.'
+    elements.append(Paragraph(conclusion, normal))
+    elements.append(Spacer(1, 12))
+
+    footer = Paragraph('GSK Medicine Prediction System - Steps 4 to 6', ParagraphStyle('footer', alignment=1, fontSize=8, textColor=colors.grey))
+    elements.append(Spacer(1, 12))
     elements.append(footer)
 
     doc.build(elements)
@@ -267,45 +256,22 @@ def main():
     print('Verifying outputs...')
     ok_images = acc_chart.exists() and pie_chart.exists()
     page_count = None
-    # Try to use pypdf (modern package). Install if missing.
     try:
-        from pypdf import PdfReader
+        from PyPDF2 import PdfReader
+        reader = PdfReader(str(pdf_path))
+        page_count = len(reader.pages)
     except Exception:
-        print('pypdf not found; attempting to install into the active Python environment...')
-        try:
-            subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'pypdf'])
-            from pypdf import PdfReader
-        except Exception as e:
-            print('Could not install pypdf:', e)
-            PdfReader = None
-
-    if ok_images and PdfReader is not None:
-        try:
-            reader = PdfReader(str(pdf_path))
-            page_count = len(reader.pages)
-        except Exception as e:
-            print('Failed to read PDF for verification:', e)
-            page_count = None
+        page_count = None
 
     if not ok_images:
         raise SystemExit('One or more chart PNGs were not created')
     if page_count is None:
-        print('Warning: PDF page count could not be verified; generated PDF at', pdf_path)
+        print('Warning: PyPDF2 not available to verify PDF page count; generated PDF at', pdf_path)
     elif page_count != 1:
         raise SystemExit(f'PDF page count is {page_count}, expected 1')
 
-    # Print final results: page count and F1-scores for each model
-    f1_dt = summary['Decision Tree'].get('f1_score', 0.0) * 100
-    f1_rf = summary['Random Forest'].get('f1_score', 0.0) * 100
-    f1_gb = summary['Gradient Boosting'].get('f1_score', 0.0) * 100
-    f1_xg = summary['XGBoost'].get('f1_score', 0.0) * 100
-
     print('Generated:', acc_chart, pie_chart, pdf_path)
-    print(f'PDF page count: {page_count if page_count is not None else "(unknown)"}')
-    print(f'Decision Tree F1-score (test): {f1_dt:.2f}%')
-    print(f'Random Forest F1-score (test): {f1_rf:.2f}%')
-    print(f'Gradient Boosting F1-score (test): {f1_gb:.2f}%')
-    print(f'XGBoost F1-score (test): {f1_xg:.2f}%')
+    print('PDF page count verified as 1' if page_count == 1 else 'PDF generated (page count not verified)')
 
 
 if __name__ == '__main__':

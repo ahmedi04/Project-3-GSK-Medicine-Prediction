@@ -409,9 +409,25 @@ def main():
             return 1
         return pd.NA
 
-    for col in ["treatment_outcome", "adverse_event", "readmission_30d"]:
+    # Map treatment_outcome and adverse_event using the existing safe text mapping
+    for col in ["treatment_outcome", "adverse_event"]:
         if col in df.columns:
             df[col] = df[col].apply(map_binary)
+
+    # Convert readmission_30d safely: accept numeric 0/1 and keep NaN for invalid values.
+    # Use pd.to_numeric(errors='coerce') to coerce stray text to NaN, then preserve only 0 and 1,
+    # keep others as NaN, and store using a nullable integer dtype so missing values are supported.
+    if "readmission_30d" in df.columns:
+        # Coerce to numeric (floats like 0.0/1.0 become 0.0/1.0; invalid -> NaN)
+        readm_num = pd.to_numeric(df["readmission_30d"], errors="coerce")
+        # Keep only exact 0 or 1 values; others become NA
+        readm_clean = readm_num.where(readm_num.isin([0, 1]), other=pd.NA)
+        # Convert floats 0.0/1.0 to integers 0/1 using nullable Int64
+        try:
+            df["readmission_30d"] = readm_clean.astype("Int64")
+        except Exception:
+            # Fallback to Float64 if Int64 conversion fails
+            df["readmission_30d"] = readm_clean.astype("Float64")
 
     # Report how many treatment_outcome values remain missing (they must be handled before supervised training)
     if "treatment_outcome" in df.columns:
@@ -490,6 +506,20 @@ def main():
 
     # Save the cleaned dataset
     print("Writing cleaned dataset to Parquet...")
+    # Validation: readmission_30d must contain both 0 and 1 and not be entirely missing
+    if "readmission_30d" in df.columns:
+        rc = df["readmission_30d"].value_counts(dropna=False)
+        # add value counts to the report
+        report_lines.append(f"readmission_30d value_counts (including NA): {rc.to_dict()}")
+        print("readmission_30d value_counts (dropna=False):")
+        print(rc)
+        has_0 = (df["readmission_30d"] == 0).any()
+        has_1 = (df["readmission_30d"] == 1).any()
+        all_missing = df["readmission_30d"].isna().all()
+        if all_missing:
+            raise SystemExit("Validation error: readmission_30d is entirely missing after conversion")
+        if not (has_0 and has_1):
+            raise SystemExit("Validation error: readmission_30d must contain both 0 and 1 after conversion")
     df.to_parquet(out, index=False)
     report_lines.append(f"Wrote cleaned Parquet to {out}")
 

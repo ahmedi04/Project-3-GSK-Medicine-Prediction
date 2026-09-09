@@ -1,0 +1,57 @@
+Scenario 3 XGBoost Explainability Report (Step 10)
+===================================================
+
+Scope
+-----
+- Model explained: saved Scenario 3 XGBoost pipeline (no retraining or retuning).
+- Neural Network remains the validation-selected model; XGBoost is explained here because it is the PDF example.
+- Split assignments and datasets were reused exactly as saved.
+
+Data checks
+-----------
+- Base dataset shape: (1050000, 31)
+- Train/Validation/Test counts: 591,525 / 197,175 / 197,176
+- Base predictors used: 26
+- Encoded features used by model: 121
+- Test patients used for global SHAP: 197,176 (all test patients; no sampling)
+
+SHAP results
+------------
+- SHAP values are reported in log-odds units (not percentage points).
+- TreeExplainer used model_output='raw' and feature_perturbation='tree_path_dependent'.
+- SHAP additivity checks were enabled.
+- Probability reconstruction check: sigmoid(expected_value + sum(SHAP)) matched pipeline probabilities with max absolute difference 3.576e-07.
+
+Individual patient explained
+----------------------------
+- Patient index in saved test split order: 0
+- Patient ID: 26319
+- Actual target: 0
+- Predicted probability (Effective=1): 0.348974
+- Predicted class at cutoff 0.50: 0
+
+LIME results
+------------
+- LIME used the same patient as SHAP.
+- LIME reference data was built from training patients only.
+- LIME perturbs 26 base predictors and decodes categorical integer codes back to original labels before pipeline prediction.
+- LIME is a local approximation of model behavior, not the exact model itself.
+- LIME local fit score: 0.031153
+- LIME local approximation for class 1 probability: 0.348782
+- Actual model probability for class 1: 0.348974
+
+Output files
+------------
+- outputs/scenario3_xgboost_shap_summary.png
+- outputs/scenario3_xgboost_shap_importance.csv
+- outputs/scenario3_xgboost_shap_importance_bar.png
+- outputs/scenario3_xgboost_shap_force_patient0.png
+- outputs/scenario3_xgboost_shap_waterfall_patient0.png
+- outputs/scenario3_xgboost_lime_patient0.png
+- outputs/scenario3_xgboost_lime_patient0.html
+- outputs/scenario3_xgboost_lime_patient0_contributions.csv
+- outputs/scenario3_xgboost_explainability_report.txt
+
+Interpretation note
+-------------------
+These outputs describe model behavior on this dataset and split. They do not establish clinical causation.

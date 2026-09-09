@@ -1,0 +1,64 @@
+XGBoost Validation Tuning Report
+===============================
+Source dataset: outputs/data_engineered.parquet
+Verified source shape: (1050000, 38)
+Labelled rows used: 985,876
+
+Excluded columns and reasons:
+- patient_id: identifier
+- treatment_outcome: target
+- admission_date: raw date
+- adverse_event: post-treatment outcome/data leakage
+- readmission_30d: post-treatment outcome/data leakage
+Predictor columns remaining: 33
+
+Split sizes and class distributions:
+- Train: rows=591,525, negative(0)=459,410 (77.665%), positive(1)=132,115 (22.335%)
+- Validation: rows=197,175, negative(0)=153,137 (77.666%), positive(1)=44,038 (22.334%)
+- Test: rows=197,176, negative(0)=153,137 (77.665%), positive(1)=44,039 (22.335%)
+
+Preprocessing explanation:
+- Numeric columns use median imputation.
+- Categorical columns use most-frequent imputation followed by one-hot encoding.
+- Preprocessing was fit only on the training set, then reused for validation and test.
+
+Baseline XGBoost validation results at threshold 0.50:
+- accuracy=0.7222, precision=0.3601, recall=0.3142, f1=0.3356, roc_auc=0.6471
+
+Tested tuned configurations:
+- Configuration 1: {'config_number': 1, 'n_estimators': 300, 'learning_rate': 0.05, 'max_depth': 4, 'min_child_weight': 5, 'gamma': 0.1, 'subsample': 0.8, 'colsample_bytree': 0.8, 'reg_alpha': 0.1, 'reg_lambda': 2, 'scale_pos_weight': 2.3}
+- Configuration 2: {'config_number': 2, 'n_estimators': 300, 'learning_rate': 0.05, 'max_depth': 5, 'min_child_weight': 10, 'gamma': 0.2, 'subsample': 0.8, 'colsample_bytree': 0.8, 'reg_alpha': 0.2, 'reg_lambda': 3, 'scale_pos_weight': 2.3}
+- Configuration 3: {'config_number': 3, 'n_estimators': 250, 'learning_rate': 0.07, 'max_depth': 4, 'min_child_weight': 10, 'gamma': 0.2, 'subsample': 0.9, 'colsample_bytree': 0.9, 'reg_alpha': 0.2, 'reg_lambda': 3, 'scale_pos_weight': 1.8}
+
+Selected configuration: 2
+Selected threshold: 0.37
+Precision target achieved? No
+- No candidate reached validation precision >= 0.50 while also keeping recall >= 0.10.
+- The fallback choice is the highest validation F1-score across all tested configurations and thresholds.
+
+Selected model validation results:
+- accuracy=0.5522, precision=0.2925, recall=0.7087, f1=0.4141, roc_auc=0.6492
+
+Untouched test results at threshold 0.50:
+- accuracy=0.7235, precision=0.3634, recall=0.3165, f1=0.3384, roc_auc=0.6500
+- confusion matrix [tn, fp, fn, tp]: [128718, 24419, 30099, 13940]
+
+Untouched test results at selected threshold 0.37:
+- accuracy=0.5517, precision=0.2921, recall=0.7079, f1=0.4136, roc_auc=0.6500
+- confusion matrix [tn, fp, fn, tp]: [77600, 75537, 12865, 31174]
+
+Overfitting comparison between training and validation for the selected model:
+- Train at selected threshold: accuracy=0.5566, precision=0.2967, recall=0.7191, f1=0.4201, roc_auc=0.6621
+- Validation at selected threshold: accuracy=0.5522, precision=0.2925, recall=0.7087, f1=0.4141, roc_auc=0.6492
+- Train-validation F1 difference: 0.0060
+- Train-validation ROC-AUC difference: 0.0128
+
+Plain-language conclusion:
+- Raising the decision threshold usually improves precision but often lowers recall. This tuning process uses validation data only, so the final test evaluation remains fair.
+- The selected setting aims to improve precision while still keeping some ability to catch effective cases.
+
+Saved CSV: outputs/xgboost_tuning_all_results.csv
+Saved report: outputs/xgboost_tuning_report.txt
+Saved threshold curve: outputs/xgboost_validation_threshold_curve.png
+Saved confusion matrices: outputs/xgboost_tuned_confusion_matrices.png
+Saved tuned pipeline object: models/xgboost_tuned_pipeline.joblib

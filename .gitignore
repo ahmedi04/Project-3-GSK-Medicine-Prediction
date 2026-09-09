@@ -1,11 +1,32 @@
 gsk_env/
 old_chunked_version/
 
-outputs/*.csv
-outputs/*.parquet
-outputs.zip
+# Secrets
 
+.env
+
+# Python caches
 __pycache__/
 *.pyc
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.ipynb_checkpoints/
+
+# OS / editor
 .DS_Store
+!.env.example
+# Large generated datasets
+
+outputs/*.csv
+outputs/**/*.csv
+outputs/**/*.parquet
+outputs/**/*.npy
+outputs/*.parquet
+outputs.zip
+# Model binaries
+.DS_Store
+models/*.keras
+models/*.h5
+models/*.onnx
 models/*.joblib

@@ -1,0 +1,100 @@
+Clinical SQL Analytics Report
+================================================================================
+Generated: 2026-09-08 22:53:17
+Database: gsk_medicine_db
+
+Interpretation note: Results are observational associations, not causal claims.
+
+Q1 - Treatment outcome distribution
+Rows returned: 3
+CSV: /Users/shoaib/Desktop/Project 3/outputs/clinical_sql/q1_treatment_outcome_distribution.csv
+Results table:
+treatment_outcome_group  total_records  known_outcome_count  missing_outcome_count  pct_of_all_records
+        Ineffective (0)         765684             765684.0                    0.0               72.92
+          Effective (1)         220192             220192.0                    0.0               20.97
+                Unknown          64124                  0.0                64124.0                6.11
+--------------------------------------------------------------------------------
+Q2 - Treatment effectiveness by age group
+Rows returned: 5
+CSV: /Users/shoaib/Desktop/Project 3/outputs/clinical_sql/q2_treatment_effectiveness_by_age_group.csv
+Results table:
+age_group  total_records  known_outcome_count  missing_outcome_count  observed_effective_rate_pct
+ Under 30          83846              78799.0                 5047.0                        37.51
+    30-50         320253             300808.0                19445.0                        27.46
+   >50-65         307331             288478.0                18853.0                        20.02
+  Over 65         261720             245660.0                16060.0                        13.67
+  Unknown          76850              72131.0                 4719.0                        23.13
+--------------------------------------------------------------------------------
+Q3 - Top 10 drugs by observed treatment effectiveness (min 100 records)
+Rows returned: 10
+CSV: /Users/shoaib/Desktop/Project 3/outputs/clinical_sql/q3_top_10_drugs_by_observed_treatment_effectiveness_min_100_records.csv
+Results table:
+         drug_group  total_records  known_outcome_count  missing_outcome_count  observed_effective_count  observed_effective_rate_pct
+        simvastatin          12840              12057.0                  783.0                    2758.0                        22.87
+       azithromycin          12739              11980.0                  759.0                    2726.0                        22.75
+         metoprolol          12553              11791.0                  762.0                    2676.0                        22.70
+         omeprazole          64861              60874.0                 3987.0                   13750.0                        22.59
+hydrochlorothiazide          13062              12282.0                  780.0                    2767.0                        22.53
+         lisinopril          64080              60081.0                 3999.0                   13524.0                        22.51
+          ibuprofen          64050              60167.0                 3883.0                   13538.0                        22.50
+         amlodipine          12946              12198.0                  748.0                    2745.0                        22.50
+   insulin glargine          51482              48314.0                 3168.0                   10856.0                        22.47
+        fluticasone          12914              12119.0                  795.0                    2719.0                        22.44
+--------------------------------------------------------------------------------
+Q4 - Adverse-event rates by drug and age category (top 15)
+Rows returned: 15
+CSV: /Users/shoaib/Desktop/Project 3/outputs/clinical_sql/q4_adverse_event_rates_by_drug_and_age_category_top_15.csv
+Results table:
+         drug_group age_category  total_records  known_adverse_count  missing_adverse_count  observed_adverse_count  observed_adverse_rate_pct
+         prednisone      Unknown            973                889.0                   84.0                   277.0                      31.16
+      ciprofloxacin      Elderly           3343               3098.0                  245.0                   962.0                      31.05
+      levothyroxine      Elderly           3282               3023.0                  259.0                   938.0                      31.03
+        clopidogrel      Elderly           3230               2944.0                  286.0                   906.0                      30.77
+         sertraline      Elderly           3275               2983.0                  292.0                   915.0                      30.67
+           warfarin      Elderly          16091              14792.0                 1299.0                  4507.0                      30.47
+         prednisone      Elderly           3228               2973.0                  255.0                   905.0                      30.44
+         amlodipine      Elderly           3133               2877.0                  256.0                   875.0                      30.41
+hydrochlorothiazide      Elderly           3255               2998.0                  257.0                   910.0                      30.35
+          albuterol      Elderly           3245               2975.0                  270.0                   897.0                      30.15
+           losartan      Elderly           3250               2977.0                  273.0                   892.0                      29.96
+        simvastatin      Elderly           3167               2912.0                  255.0                   871.0                      29.91
+       atorvastatin      Elderly          16100              14896.0                 1204.0                  4446.0                      29.85
+       escitalopram      Elderly           3245               2981.0                  264.0                   887.0                      29.76
+         gabapentin      Elderly          15955              14672.0                 1283.0                  4357.0                      29.70
+--------------------------------------------------------------------------------
+Q5 - High-risk patients (age > 65, creatinine > 1.5, concurrent_drugs >= 5)
+Rows returned: 20
+CSV: /Users/shoaib/Desktop/Project 3/outputs/clinical_sql/q5_high_risk_patients_age_65_creatinine_1_5_concurrent_drugs_5.csv
+Results table:
+ patient_id   age      bmi  creatinine  concurrent_drugs  treatment_outcome  adverse_event
+     708647  66.0 37.20000        5.96               5.0                0.0            0.0
+     574789  68.0 33.90000        5.31              50.0                0.0            NaN
+     176172  69.0 25.80000        5.23               6.0                0.0            0.0
+     552290  70.0 29.80000        5.18               5.0                0.0            0.0
+     127487  72.0 34.20000        4.93               7.0                0.0            0.0
+     893289  67.0 17.10000        4.90               6.0                0.0            0.0
+     465350 104.0 28.27563        4.85               7.0                0.0            0.0
+     478153  79.0 24.60000        4.76               5.0                0.0            NaN
+     307316  67.0 23.30000        4.64              10.0                0.0            0.0
+     947136  79.0 34.50000        4.53               5.0                0.0            0.0
+     844008  74.0 15.30000        4.50               5.0                0.0            0.0
+     120481  72.0 23.70000        4.38               5.0                0.0            1.0
+     761936  76.0 25.20000        4.23               5.0                0.0            1.0
+     193085  71.0 19.80000        4.21               6.0                NaN            0.0
+     181344  90.0 37.00000        4.19               7.0                0.0            1.0
+     666392  83.0 26.60000        4.15               5.0                0.0            0.0
+      93610  72.0 27.80000        4.14               9.0                0.0            0.0
+     152688  75.0 23.80000        4.12               5.0                0.0            1.0
+     241596  68.0      NaN        4.12               5.0                0.0            0.0
+     406633  70.0 35.00000        4.10               6.0                0.0            0.0
+--------------------------------------------------------------------------------
+Q6 - Treatment and adverse-event rates by dosage category
+Rows returned: 4
+CSV: /Users/shoaib/Desktop/Project 3/outputs/clinical_sql/q6_treatment_and_adverse_event_rates_by_dosage_category.csv
+Results table:
+   dosage_category  total_records  known_outcome_count  missing_outcome_count  known_adverse_count  missing_adverse_count  observed_effective_rate_pct  observed_adverse_rate_pct
+      Low (<100mg)         408301             383454.0                24847.0             375631.0                32670.0                        22.29                      25.05
+Medium (100-500mg)         326750             306884.0                19866.0             300200.0                26550.0                        22.33                      25.03
+     High (>500mg)         162018             152067.0                 9951.0             149042.0                12976.0                        22.43                      25.11
+           Unknown         152931             143471.0                 9460.0             140692.0                12239.0                        22.36                      25.16
+--------------------------------------------------------------------------------

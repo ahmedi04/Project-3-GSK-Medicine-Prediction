@@ -1,0 +1,60 @@
+DATA AUDIT REPORT
+=================
+Raw metadata: rows=1,155,000, columns=41
+Cleaned metadata: rows=1,050,000, columns=31
+Engineered metadata: rows=1,050,000, columns=38
+
+Expected shapes validation:
+- Raw: rows -> expected 1,155,000, got 1,155,000 -> OK; columns -> expected 41, got 41 -> OK
+- Cleaned: rows -> expected 1,050,000, got 1,050,000 -> OK; columns -> expected 31, got 31 -> OK
+- Engineered: rows -> expected 1,050,000, got 1,050,000 -> OK; columns -> expected 38, got 38 -> OK
+
+Raw Patient_ID summary:
+- total rows: 1,155,000
+- unique Patient_IDs: 1,050,000
+- repeated Patient_ID rows (duplicated().sum()): 105,000
+
+Cleaned patient_id summary:
+- total rows: 1,050,000
+- unique patient_id: 1,050,000
+- is_unique: True
+- repeated patient_id rows: 0
+
+Reduction check (raw -> cleaned):
+Observed row reduction raw -> cleaned: 105,000
+Raw repeated Patient_ID rows: 105,000
+Reduction equals raw repeated rows? YES
+
+Missing values in treatment_outcome:
+- cleaned: 64124
+- engineered: 64124
+
+Column lineage and transformations:
+- Merged duplicate columns:
+  patient_id_1 -> Patient_ID -> patient_id; age_1 -> Age -> age; gender_1 -> Gender -> gender; drug_name_1 -> Drug_Name -> drug_name
+- Helper columns used then removed: Weight_lbs (used to complete weight_kg), blood_pressure (used to derive systolic_bp and diastolic_bp)
+- Irrelevant columns removed: Notes, Extra_Col_1, Extra_Col_2, unnamed_0
+- All remaining clinical columns were retained and standardized to lowercase snake_case names.
+
+Important columns presence check in cleaned and engineered:
+- Cleaned: all important columns present
+- Engineered: all important columns present
+
+Cleaned dataset exact-column validation (expecting 31 columns):
+- No expected cleaned columns missing
+- No unexpected cleaned columns found
+
+Engineered data contains all listed features.
+
+Exact duplicate rows reported in EDA summary: 70,017
+
+Note: If `patient_id` is unique in cleaned data, there cannot be any rows that are exact duplicates across every column because duplicate rows would necessarily share the same patient_id.
+
+PASS/FAIL Summary:
+- shapes_match_expected: PASS
+- reduction_matches_removed_duplicates: PASS
+- important_columns_present: PASS
+- engineered_features_present: PASS
+- cleaned_columns_exact_match: PASS
+
+CONCLUSION: PASS — No important columns appear missing and removed rows are explained by duplicate Patient_ID rows.

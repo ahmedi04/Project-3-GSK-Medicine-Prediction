@@ -1,0 +1,57 @@
+Scenario 3 Neural Network Report
+================================
+Source file: outputs/scenario3_validation_input.parquet
+Split file: outputs/scenario3_split_assignments.parquet
+Base shape: (1050000, 31)
+Labelled rows: 985,876
+Missing-target rows: 64,124
+
+Split counts and class distributions:
+- Train: rows=591,525, negative(0)=459,410 (77.665%), positive(1)=132,115 (22.335%)
+- Validation: rows=197,175, negative(0)=153,137 (77.666%), positive(1)=44,038 (22.334%)
+- Test: rows=197,176, negative(0)=153,137 (77.665%), positive(1)=44,039 (22.335%)
+- Test data is preserved for the final comparison stage and is not used for training or selection.
+
+Preprocessing and feature handling:
+- Reused the fitted Decision Tree preprocessor without refitting.
+- Encoded feature count: 121
+- Numeric feature count before one-hot expansion: 23
+- Categorical feature count before one-hot expansion: 10
+- Numeric encoded positions were standardized with StandardScaler fitted only on training data.
+- One-hot indicators were left in their 0/1 form.
+
+Neural network architecture:
+- Input -> Dense(128, relu) -> BatchNormalization -> Dropout(0.3)
+- Dense(64, relu) -> BatchNormalization -> Dropout(0.3)
+- Dense(32, relu) -> Dropout(0.2) -> Dense(1, sigmoid)
+- Optimizer: Adam(lr=0.001)
+- Loss: binary_crossentropy
+- Metrics: accuracy, AUC(name='auc')
+- Batch size: 512 (runtime adaptation from the PDF's 64; every epoch still uses all training records)
+- Maximum epochs: 100
+- Actual epochs completed: 15
+- Selected best epoch: 5
+
+Class weights from training labels only:
+- class_0=0.643788, class_1=2.238675
+
+Training and validation metrics at cutoff 0.50:
+- Train: accuracy=0.5977, precision=0.3065, recall=0.6346, f1=0.4134, roc_auc=0.6519
+  Confusion matrix [tn, fp, fn, tp]: [269698, 189712, 48272, 83843]
+- Validation: accuracy=0.5957, precision=0.3039, recall=0.6279, f1=0.4096, roc_auc=0.6473
+  Confusion matrix [tn, fp, fn, tp]: [89808, 63329, 16386, 27652]
+
+Saved artifacts:
+- Model: models/scenario3_neural_network.keras
+- Preprocessing bundle: models/scenario3_nn_preprocessing.joblib
+- Metrics CSV: outputs/scenario3_nn_metrics.csv
+- Training history CSV: outputs/scenario3_nn_training_history.csv
+- Training history figure: outputs/scenario3_nn_training_history.png
+- Validation confusion matrix: outputs/scenario3_nn_validation_confusion_matrix.png
+- Validation predictions: outputs/scenario3_nn_validation_predictions.parquet
+
+Notes:
+- The test split remains untouched for the final comparison stage.
+- The preprocessor bundle stores the fitted preprocessor, fitted scaler, numeric positions, and encoded feature names.
+- Standardization was applied only to the numeric encoded columns; the one-hot indicators remained 0/1.
+- All arrays were cast to float32 before model training and evaluation.

@@ -1,0 +1,135 @@
+Scenario 3 Model Evaluation and Comparison
+=========================================
+
+Overview
+--------
+Source file: outputs/scenario3_validation_input.parquet
+Split file: outputs/scenario3_split_assignments.parquet
+Base shape: (1050000, 31)
+Labelled rows: 985,876
+
+Data splits:
+- Train: 591,525 rows, 132,115 positive (22.33%)
+- Validation: 197,175 rows, 44,038 positive (22.33%)
+- Test: 197,176 rows, 44,039 positive (22.33%)
+
+Models
+------
+This comparison evaluates five pre-trained models without retraining or retuning:
+
+1. Decision Tree: Fitted sklearn Decision Tree pipeline
+   - File: models/scenario3_decision_tree_pipeline.joblib
+   - Parameters: max_depth=8, min_samples_split=20, min_samples_leaf=10
+
+2. Random Forest: Fitted sklearn Random Forest pipeline
+   - File: models/scenario3_random_forest_pipeline.joblib
+   - Parameters: n_estimators=200, max_depth=12, min_samples_split=15
+
+3. XGBoost: Fitted XGBoost pipeline
+   - File: models/scenario3_xgboost_pipeline.joblib
+   - Parameters: n_estimators=200, max_depth=6, learning_rate=0.1
+
+4. Neural Network: Keras Dense model reusing Decision Tree's fitted preprocessor
+   - File: models/scenario3_neural_network.keras
+   - Architecture: Dense(128)→BN→Dense(64)→BN→Dense(32)→Dense(1)
+   - Trained with EarlyStopping on validation ROC-AUC
+
+5. LSTM Demo: Keras LSTM model for educational purposes
+   - File: models/scenario3_lstm_demo.keras
+   - DISCLAIMER: This model uses exactly ONE timestep per patient.
+     It is an educational sequence wrapper only and does not learn
+     temporal changes over time. Each patient contributes one observation.
+   - Architecture: LSTM(64)→LSTM(32)→Dense(16)→Dense(1)
+
+Model Selection Criterion
+------------------------
+Among Decision Tree, Random Forest, XGBoost, and Neural Network,
+the model with the highest validation ROC-AUC was selected.
+In case of ties, F1 was used as tiebreaker.
+LSTM is included as an educational comparison with the caveat above.
+
+VALIDATION-BASED SELECTION (Recorded Before Test Evaluation)
+-----------------------------------------------------------
+Selected Model: NeuralNetwork
+  - Validation Accuracy: 0.5957
+  - Validation Precision: 0.3039
+  - Validation Recall: 0.6279
+  - Validation F1: 0.4096
+  - Validation ROC-AUC: 0.6473
+
+Validation Metrics Summary
+--------------------------
+AlwaysZero reference: Accuracy=0.7767, Precision=0.0000, Recall=0.0000, F1=0.0000, ROC-AUC=0.5000, AP=0.2233
+DecisionTree:
+  Accuracy=0.5781, Precision=0.2981, Recall=0.6565, F1=0.4100, ROC-AUC=0.6429, AP=0.3281
+  TN=85072, FP=68065, FN=15129, TP=28909
+RandomForest:
+  Accuracy=0.5795, Precision=0.2982, Recall=0.6522, F1=0.4093, ROC-AUC=0.6429, AP=0.3298
+  TN=85541, FP=67596, FN=15317, TP=28721
+XGBoost:
+  Accuracy=0.7210, Precision=0.3577, Recall=0.3131, F1=0.3339, ROC-AUC=0.6458, AP=0.3328
+  TN=128378, FP=24759, FN=30251, TP=13787
+NeuralNetwork:
+  Accuracy=0.5957, Precision=0.3039, Recall=0.6279, F1=0.4096, ROC-AUC=0.6473, AP=0.3351
+  TN=89808, FP=63329, FN=16386, TP=27652
+LSTM:
+  Accuracy=0.5916, Precision=0.3028, Recall=0.6364, F1=0.4104, ROC-AUC=0.6474, AP=0.3347
+  TN=88617, FP=64520, FN=16013, TP=28025
+
+Test Set Evaluation
+-------------------
+This test split was evaluated in earlier scenarios. In this comparison, model selection uses validation results only, and the saved models are evaluated without retraining or retuning.
+
+AlwaysZero reference: Accuracy=0.7767, Precision=0.0000, Recall=0.0000, F1=0.0000, ROC-AUC=0.5000, AP=0.2233
+DecisionTree:
+  Accuracy=0.5795, Precision=0.2997, Recall=0.6603, F1=0.4123, ROC-AUC=0.6459, AP=0.3318
+  TN=85191, FP=67946, FN=14958, TP=29081
+RandomForest:
+  Accuracy=0.5802, Precision=0.2990, Recall=0.6541, F1=0.4104, ROC-AUC=0.6449, AP=0.3331
+  TN=85595, FP=67542, FN=15231, TP=28808
+XGBoost:
+  Accuracy=0.7239, Precision=0.3637, Recall=0.3154, F1=0.3379, ROC-AUC=0.6488, AP=0.3363
+  TN=128839, FP=24298, FN=30148, TP=13891
+NeuralNetwork:
+  Accuracy=0.5968, Precision=0.3048, Recall=0.6285, F1=0.4105, ROC-AUC=0.6496, AP=0.3375
+  TN=90004, FP=63133, FN=16362, TP=27677
+LSTM:
+  Accuracy=0.5927, Precision=0.3037, Recall=0.6373, F1=0.4114, ROC-AUC=0.6500, AP=0.3378
+  TN=88796, FP=64341, FN=15971, TP=28068
+
+Baseline Comparison
+-------------------
+For context, the AlwaysZero reference predicts the majority class only.
+It can show high accuracy on this imbalanced dataset while having zero recall for the positive class.
+
+Key Insights
+------------
+1. Validation ROC-AUC ranking:
+   - LSTM: 0.6474
+   - NeuralNetwork: 0.6473
+   - XGBoost: 0.6458
+   - RandomForest: 0.6429
+   - DecisionTree: 0.6429
+2. Test ROC-AUC ranking:
+   - LSTM: 0.6500
+   - NeuralNetwork: 0.6496
+   - XGBoost: 0.6488
+   - DecisionTree: 0.6459
+   - RandomForest: 0.6449
+3. Precision-recall tradeoffs differ across models even when ROC-AUC is similar.
+4. The LSTM result is educational only because the data provides one observation per patient.
+5. These Scenario 3 models are evaluated on a fixed holdout split and were not refit for this script.
+
+Output Files
+------------
+- Metrics CSV: outputs/scenario3_final_model_comparison.csv
+- Test predictions: outputs/scenario3_final_test_predictions.parquet
+- ROC curves: outputs/scenario3_final_roc_curves.png
+- Precision-Recall curves: outputs/scenario3_final_precision_recall_curves.png
+- Confusion matrices: outputs/scenario3_final_confusion_matrices.png
+- Metrics bar chart: outputs/scenario3_final_metrics_bar_chart.png
+
+Cutoff: 0.50 (probability ≥ 0.50 → predict 1, else 0)
+
+This comparison script was run without retraining, retuning, or refitting models.
+All models were applied to fixed validation and test splits.
